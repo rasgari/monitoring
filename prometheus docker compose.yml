@@ -1,0 +1,22 @@
+  prometheus:
+    container_name: prometheus
+    image: /prom/prometheus:latest 
+# echo $UID --> add UID of user that want to run docker-compose ex: root = 0 or admin = x then add to image's user   
+    user: "0:0"  
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/data:/prometheus
+    command:
+      --config.file=/etc/prometheus/prometheus.yml
+      --storage.tsdb.path=/prometheus
+      --storage.tsdb.retention.time=30d
+    expose:
+     - 9090
+    ports:
+     - 9090:9090
+    links:
+     - cadvisor:cadvisor
+     - node-exporter:node-exporter
+    networks:
+      - app-tire
+    restart: unless-stopped
