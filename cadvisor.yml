@@ -1,0 +1,19 @@
+cadvisor:
+  image: gcr.io/cadvisor/cadvisor:v0.49.1
+  container_name: cadvisor
+  restart: unless-stopped
+  command:
+    - "--storage_driver=none"
+    - "--disable_metrics=percpu,process,advtcp,hugetlb,sched,diskIO"
+  ports:
+    - "8080:8080"
+  volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:ro
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+  deploy:
+    resources:
+      limits:
+        cpus: "0.3"
+        memory: 200M
